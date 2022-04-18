@@ -1,6 +1,27 @@
 <template>
   <router-view />
+  <div>
+  </div>
 </template>
+
+<script>
+  import {mapActions, mapState} from "vuex";
+
+  export default {
+    name: "APP",
+    methods: {
+      ...mapActions("user", ["checkAuth"]),
+    },
+    computed: {
+      ...mapState("user", ["isAuth"]),
+    },
+    mounted() {
+      if (localStorage.getItem("token")) {
+        this.checkAuth()
+      }
+    }
+  }
+</script>
 
 <style lang="scss">
 html, body {

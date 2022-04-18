@@ -52,6 +52,13 @@
       </ul>
     </div>
     <div class="site-content--inner">
+      <div v-if="isAuth">
+        es
+      </div>
+      <div v-else>
+        no
+      </div>
+
       <div class="card">
         <div class="card--title">
           Типы данных
@@ -108,30 +115,69 @@
   </div>
   <ui-modal v-if="modalVisible" @close="modalVisible = false">
     <template v-slot:header>
-      <h2>Card Header Title</h2>
+      <h2>Login</h2>
     </template>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim iste quas
-      quod repudiandae vero. Consequuntur dolores doloribus facilis fugiat
-      ipsum non quas reiciendis temporibus. Enim excepturi fugiat voluptatem
-      voluptates. Adipisci aspernatur doloremque enim, esse explicabo fugiat
-      fugit illum in ipsam ipsum itaque laborum laudantium magnam nihil odio
-      porro rerum vel, veritatis voluptas voluptatibus. Eos facilis nisi
-      saepe? Aut corporis debitis distinctio dolores facilis id iste libero,
-      minima molestiae nam, natus necessitatibus nisi praesentium quasi
-      quibusdam quidem quisquam repellendus rerum voluptate voluptates! A
-      aliquam amet architecto dolorem eveniet iure molestiae nesciunt nulla
-      ullam voluptatum? Aut dolorem et laboriosam quos suscipit unde.
-    </p>
+    <form @submit.prevent>
+      <div>
+        <ui-input v-model="email" placeholder="email" />
+      </div>
+      <div>
+        <ui-input v-model="password" type="password" placeholder="password" />
+      </div>
+      <div>
+        <ui-button type="click" @click="login"> login </ui-button>
+        <ui-button type="click" @click="registration"> registration </ui-button>
+        <ui-button type="click" @click="logout"> logout </ui-button>
+        <ui-button type="click" @click="getUsersList"> getUsers </ui-button>
+      </div>
+    </form>
   </ui-modal>
 </template>
 
 <script>
+  import {mapActions, mapState} from "vuex";
+
   export default {
     name: "JsView",
     data() {
       return {
         modalVisible: false,
+        email: "evgen904@gmail.com",
+        password: "12345",
+      }
+    },
+    computed: {
+      ...mapState("user", ["isAuth"]),
+    },
+    methods: {
+      ...mapActions("user", ["userLogin", "userRegistration", "userLogout", "getUsers"]),
+      login() {
+        const dataUser = {
+          email: this.email,
+          password: this.password,
+        }
+        this.userLogin(dataUser)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => console.log(err))
+      },
+      registration() {
+        const dataUser = {
+          email: this.email,
+          password: this.password,
+        }
+        this.userRegistration(dataUser)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => console.log(err))
+      },
+      logout() {
+        this.userLogout()
+      },
+      getUsersList() {
+        this.getUsers()
       }
     }
   }
