@@ -3,13 +3,13 @@ const ApiError = require('../exceptions/api-error')
 const tokenService = require('./token-service.js')
 
 class PostService {
-  async addPost (refreshToken, title, description) {
+  async addPost (refreshToken, title, description, folder) {
     const post = await PostModel.findOne({title})
     if (post) {
       throw ApiError.BadRequest(`Пост ${title} уже создан`)
     }
     const userData = await tokenService.validateRefreshToken(refreshToken);
-    const postData = await PostModel.create({user: userData.id, title, description})
+    const postData = await PostModel.create({user: userData.id, title, description, folder})
     return { postData }
   }
 

@@ -9,6 +9,18 @@ const PostSchema = new Schema({
     type: String,
     required: true
   },
+  status: {
+    type: String,
+    default: 'moderation'
+  },
+  show: {
+    type: Boolean,
+    default: true
+  },
+  showAll: {
+    type: Boolean,
+    default: true
+  },
   date: {
     type: Date,
     default: Date.now // по дефолту текущее время
@@ -18,10 +30,11 @@ const PostSchema = new Schema({
     default: 0
   },
   imageUrl: String,
-  folders: [{
-    type: Schema.Types.ObjectId,
-    ref: 'folders'
-  }],
+  folder: {
+    type: Schema.Types.String,
+    required: true,
+    ref: 'Folder'
+  },
   comments: [{
     type: Schema.Types.ObjectId,
     ref: 'comments'

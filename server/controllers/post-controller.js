@@ -4,9 +4,9 @@ const ApiError = require('../exceptions/api-error')
 class PostController {
   async add(req, res, next) {
     try {
-      const {title, description} = req.body;
+      const {title, description, folder} = req.body;
       const {refreshToken} = req.cookies;
-      const postData = await postService.addPost(refreshToken, title, description);
+      const postData = await postService.addPost(refreshToken, title, description, folder);
       return res.json(postData)
     } catch (e) {
       next(e)

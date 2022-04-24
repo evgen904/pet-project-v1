@@ -16,14 +16,14 @@ router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 
-router.post('/folder/add/', folderController.add);
-router.post('/folder/remove/', folderController.remove);
-router.post('/folder/set/', folderController.set);
+router.post('/folder/add/', authMiddleware, folderController.add);
+router.post('/folder/remove/', authMiddleware, folderController.remove);
+router.post('/folder/set/', authMiddleware, folderController.set);
 router.get('/folder/get/', folderController.getFolders);
 
 router.post('/post/add/', authMiddleware, postController.add);
-router.post('/post/remove/', postController.remove);
-router.post('/post/set/', postController.set);
+router.post('/post/remove/', authMiddleware, postController.remove);
+router.post('/post/set/', authMiddleware, postController.set);
 router.get('/post/get/', postController.getPosts);
 
 module.exports = router
