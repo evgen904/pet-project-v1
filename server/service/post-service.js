@@ -1,4 +1,5 @@
 const PostModel = require('../models/post-model')
+const FolderModel = require('../models/folder-model')
 const ApiError = require('../exceptions/api-error')
 const tokenService = require('./token-service.js')
 
@@ -7,6 +8,10 @@ class PostService {
     const post = await PostModel.findOne({title})
     if (post) {
       throw ApiError.BadRequest(`Пост ${title} уже создан`)
+    }
+    const folderName = await FolderModel.findOne({name: folder})
+    if (!folderName) {
+      throw ApiError.BadRequest(`Категории ${folder} нет`)
     }
     const userData = await tokenService.validateRefreshToken(refreshToken);
     const postData = await PostModel.create({user: userData.id, title, description, folder})
