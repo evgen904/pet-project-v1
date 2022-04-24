@@ -21,7 +21,7 @@ router.post('/folder/remove/', folderController.remove);
 router.post('/folder/set/', folderController.set);
 router.get('/folder/get/', folderController.getFolders);
 
-router.post('/post/add/', postController.add);
+router.post('/post/add/', authMiddleware, postController.add);
 router.post('/post/remove/', postController.remove);
 router.post('/post/set/', postController.set);
 router.get('/post/get/', postController.getPosts);
