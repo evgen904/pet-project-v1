@@ -19,7 +19,7 @@ const PostSchema = new Schema({
   },
   showAll: {
     type: Boolean,
-    default: true
+    default: false
   },
   date: {
     type: Date,

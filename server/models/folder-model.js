@@ -10,7 +10,11 @@ const FolderSchema = new Schema({
     type: String,
     unique: true,
     required: true
-  }
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
 })
 
 module.exports = model('Folders', FolderSchema)

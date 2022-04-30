@@ -1,4 +1,5 @@
 const UserModel = require('../models/user-model')
+const RoleModel = require('../models/role-model')
 const bcrypt = require('bcrypt')
 const uuid = require('uuid')
 const mailService = require('./mail-service')
@@ -14,10 +15,11 @@ class UserService {
     }
     const hashPassword = await bcrypt.hash(password, 3)
     const activationLink = uuid.v4()
-    const user = await UserModel.create({email, password: hashPassword, activationLink})
+    const userRole = await RoleModel.findOne({value: 'USER'})
+    const user = await UserModel.create({email, password: hashPassword, activationLink, roles: [userRole.value]})
     await mailService.sendActivationmail(email, `${process.env.API_URL}api/activate/${activationLink}`)
 
-    const userDto = new UserDto(user); // id, email, isActivated
+    const userDto = new UserDto(user); // id, email, isActivated, roles
     const tokens = tokenService.generateTokens({...userDto});
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
@@ -75,6 +77,15 @@ class UserService {
   async getAllUsers() {
     const user = UserModel.find();
     return user;
+  }
+
+  async addRole(role) {
+    const isRole = await RoleModel.findOne({value: role})
+    if (isRole) {
+      throw ApiError.BadRequest(`Роль ${role} уже создана`)
+    }
+    const roleData = await RoleModel.create({value: role})
+    return { roleData }
   }
 }
 

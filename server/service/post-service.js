@@ -14,7 +14,7 @@ class PostService {
       throw ApiError.BadRequest(`Категории ${folder} нет`)
     }
     const userData = await tokenService.validateRefreshToken(refreshToken);
-    const postData = await PostModel.create({user: userData.id, title, description, folder})
+    const postData = await PostModel.create({user: userData.id, title, description, folder: folderName.name})
     return { postData }
   }
 

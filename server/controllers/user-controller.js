@@ -70,6 +70,19 @@ class UserController {
       next(e)
     }
   }
+
+  async roleAdd(req, res, next) {
+    try {
+      const {role} = req.body;
+      if (!role) {
+        return next(ApiError.BadRequest('Роль не указана'))
+      }
+      const roleData = await userService.addRole(role);
+      return res.json(roleData)
+    } catch (e) {
+      next(e)
+    }
+  }
 }
 
 module.exports = new UserController();

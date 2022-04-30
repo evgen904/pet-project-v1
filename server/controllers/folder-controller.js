@@ -5,7 +5,8 @@ class FolderController {
   async add(req, res, next) {
     try {
       const {name, title} = req.body;
-      const folderData = await folderService.addFolder(name, title);
+      const {refreshToken} = req.cookies;
+      const folderData = await folderService.addFolder(refreshToken, name, title);
       return res.json(folderData)
     } catch (e) {
       next(e)
