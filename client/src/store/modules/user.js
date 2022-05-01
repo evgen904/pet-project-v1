@@ -12,18 +12,18 @@ const getters = {
 };
 
 const actions = {
-  userLogin({commit}, payload) {
-    Users.login(payload)
+   userLogin({commit}, payload) {
+     return Users.login(payload)
       .then(res => {
         if (res.data.accessToken) {
           localStorage.setItem("token", res.data.accessToken)
           commit("setIsAuth", true)
           commit("setUser", res.data.user)
         }
-        console.log(res, "res Login");
+        return res;
       })
       .catch(err => {
-        console.log(err)
+        console.log(err, "dataUser dataUser dataUser")
       })
   },
   userRegistration({commit}, payload) {
@@ -39,19 +39,18 @@ const actions = {
       .catch(err => console.log(err, "registration"))
   },
   userLogout({commit}) {
-    Users.logout()
+    return Users.logout()
       .then(res => {
         localStorage.removeItem("token")
         commit("setIsAuth", false)
         commit("setUser", {})
-        console.log(res, "res Login");
+        return res
       })
       .catch(err => console.log(err, "registration"))
   },
   async checkAuth({commit}) {
     try {
       const response = await axios.get(`http://localhost:5000/api/refresh`, {withCredentials: true})
-      console.log(response, 'checkAuth');
       localStorage.setItem("token", response.data.accessToken)
       commit("setIsAuth", true)
       commit("setUser", response.data.user)

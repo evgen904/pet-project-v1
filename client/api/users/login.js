@@ -1,5 +1,5 @@
 import HTTP from "../http-common";
 
-export default async (payload) => {
+export default (payload) => {
   return HTTP.post("/login", payload)
 }

@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: [String(process.env.CLIENT_URL)],
+  origin: ['http://localhost:8080'],
   credentials: true
 }));
 app.use('/api', router);

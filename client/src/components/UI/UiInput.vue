@@ -3,6 +3,7 @@
     :value="modelValue"
     @input="updateInput"
     class="ui-input"
+    :class="{ 'block': isBlock }"
     :type="type"
   />
 </template>
@@ -15,6 +16,10 @@ export default {
     type: {
       type: String,
       default: "text",
+    },
+    isBlock: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -35,5 +40,9 @@ export default {
   margin: 0;
   font-size: 14px;
   background: #fff;
+  &.block {
+    display: block;
+    width: 100%;
+  }
 }
 </style>

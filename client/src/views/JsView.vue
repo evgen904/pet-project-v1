@@ -1,12 +1,5 @@
 <template>
-  <div class="header">
-    <div class="header--title">
-      Шпаргалка по JS
-    </div>
-    <div class="header--btn">
-      <ui-button color="default" @click="modalVisible = true"> Добавить шпаргалку </ui-button>
-    </div>
-  </div>
+  <Header />
   <div class="site-content">
     <div class="site-content--sidebar">
       <ul class="menu">
@@ -135,74 +128,59 @@
 </template>
 
 <script>
-  import {mapActions, mapState} from "vuex";
+import {mapActions, mapState} from "vuex";
+import Header from "@/components/Header"
 
-  export default {
-    name: "JsView",
-    data() {
-      return {
-        modalVisible: false,
-        email: "evgen904@gmail.com",
-        password: "12345",
+export default {
+  name: "JsView",
+  components: {
+    Header
+  },
+  data() {
+    return {
+      modalVisible: false,
+      email: "evgen904@gmail.com",
+      password: "12345",
+    }
+  },
+  computed: {
+    ...mapState("user", ["isAuth"]),
+  },
+  methods: {
+    ...mapActions("user", ["userLogin", "userRegistration", "userLogout", "getUsers"]),
+    login() {
+      const dataUser = {
+        email: this.email,
+        password: this.password,
       }
+      this.userLogin(dataUser)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => console.log(err))
     },
-    computed: {
-      ...mapState("user", ["isAuth"]),
-    },
-    methods: {
-      ...mapActions("user", ["userLogin", "userRegistration", "userLogout", "getUsers"]),
-      login() {
-        const dataUser = {
-          email: this.email,
-          password: this.password,
-        }
-        this.userLogin(dataUser)
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => console.log(err))
-      },
-      registration() {
-        const dataUser = {
-          email: this.email,
-          password: this.password,
-        }
-        this.userRegistration(dataUser)
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => console.log(err))
-      },
-      logout() {
-        this.userLogout()
-      },
-      getUsersList() {
-        this.getUsers()
+    registration() {
+      const dataUser = {
+        email: this.email,
+        password: this.password,
       }
+      this.userRegistration(dataUser)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => console.log(err))
+    },
+    logout() {
+      this.userLogout()
+    },
+    getUsersList() {
+      this.getUsers()
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-.header {
-  height: 60px;
-  background: #f9f9f9;
-  display: grid;
-  grid-template-columns: 1fr minmax(100px, 1000px) minmax(100px, 240px) 1fr;
-  grid-template-areas: ". title btn .";
-  margin-bottom: 20px;
-  &--title {
-    grid-area: title;
-    align-self: center;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  &--btn {
-    grid-area: btn;
-    justify-self: flex-end;
-    align-self: center;
-  }
-}
 .site-content {
   display: grid;
   grid-template-columns: 1fr 240px 20px minmax(100px, 1000px) 1fr;
