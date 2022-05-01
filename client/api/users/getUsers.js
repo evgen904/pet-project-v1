@@ -1,5 +1,5 @@
 import HTTP from "../http-common";
 
-export default async () => {
+export default () => {
   return HTTP.get("/users")
 }

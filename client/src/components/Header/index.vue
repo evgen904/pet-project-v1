@@ -5,7 +5,11 @@
     </div>
     <div class="header--btn">
       <ui-button v-if="!isAuth" @click="auth" color="primary">Войти</ui-button>
-      <ui-button v-else @click="logout" color="default">Выйти</ui-button>
+      <template v-else>
+        <ui-button @click="addFolder" color="primary">Добавить категорию</ui-button>
+        <ui-button @click="addPost" color="primary">Добавить пост</ui-button>
+        <ui-button @click="logout" color="default">Выйти</ui-button>
+      </template>
     </div>
   </div>
   <ui-modal class="modal-auth" v-if="modalVisible" @close="modalVisible = false">
@@ -84,7 +88,7 @@ export default {
   height: 60px;
   background: #f9f9f9;
   display: grid;
-  grid-template-columns: 1fr minmax(100px, 1000px) minmax(100px, 240px) 1fr;
+  grid-template-columns: 1fr minmax(100px, 640px) minmax(100px, 600px) 1fr;
   grid-template-areas: ". title btn .";
   margin-bottom: 20px;
   &--title {
@@ -97,6 +101,9 @@ export default {
     grid-area: btn;
     justify-self: flex-end;
     align-self: center;
+    .ui-btn {
+      margin-left: 10px;
+    }
   }
 }
 .modal-auth {

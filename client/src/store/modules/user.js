@@ -23,7 +23,7 @@ const actions = {
         return res;
       })
       .catch(err => {
-        console.log(err, "dataUser dataUser dataUser")
+        console.log(err, "Users.login")
       })
   },
   userRegistration({commit}, payload) {
@@ -34,7 +34,6 @@ const actions = {
           commit("setIsAuth", true)
           commit("setUser", res.data.user)
         }
-        console.log(res, "res Login");
       })
       .catch(err => console.log(err, "registration"))
   },

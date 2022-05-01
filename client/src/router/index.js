@@ -10,6 +10,16 @@ const routes = [
     name: "JsView",
     component: () => import("@/views/JsView"),
   },
+  {
+    path: "/folder",
+    name: "FolderView",
+    component: () => import("@/views/FolderView"),
+  },
+  {
+    path: "/post",
+    name: "PostView",
+    component: () => import("@/views/PostView"),
+  },
 ];
 
 const router = createRouter({
