@@ -6,8 +6,8 @@
     <div class="header--btn">
       <ui-button v-if="!isAuth" @click="auth" color="primary">Войти</ui-button>
       <template v-else>
-        <ui-button @click="addFolder" color="primary">Добавить категорию</ui-button>
-        <ui-button @click="addPost" color="primary">Добавить пост</ui-button>
+        <ui-button @click="$router.push({name: 'FolderView'})" color="primary">Добавить категорию</ui-button>
+        <ui-button @click="$router.push({name: 'PostView'})" color="primary">Добавить пост</ui-button>
         <ui-button @click="logout" color="default">Выйти</ui-button>
       </template>
     </div>
