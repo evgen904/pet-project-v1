@@ -78,6 +78,9 @@ export default {
     },
     logout() {
       this.userLogout()
+      this.$router.push({
+        name: "JsView"
+      })
     },
   }
 }
