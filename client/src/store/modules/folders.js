@@ -1,4 +1,4 @@
-import { Folders } from "../../../api";
+import { Folders } from "@/api";
 
 const state = () => ({
   folders: [],
@@ -10,8 +10,20 @@ const getters = {
 
 const actions = {
   addFolder({commit}, payload) {
-    return Folders.add(payload)
+    return Folders.addFolder(payload)
       .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  getFolder({commit}) {
+    return Folders.getFolders()
+      .then(res => {
+        if (res?.data) {
+          commit("setFolders", res.data);
+        }
         return res;
       })
       .catch(err => {
@@ -21,7 +33,9 @@ const actions = {
 };
 
 const mutations = {
-
+  setFolders(state, value) {
+    state.folders = value
+  },
 };
 
 export default {

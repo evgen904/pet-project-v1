@@ -19,20 +19,26 @@
           <p>
             Категория для поста
           </p>
-          <ui-select :options="options" />
+          <ui-select v-model="selected" :options="folderList" />
         </div>
         <div class="post--field">
-          <CkEditor @sendContent="getContent" :content="initialData" />
+          <CkEditor @sendContent="getContent" :content="description" />
         </div>
         <div class="post--field">
-          <ui-checkbox>
+          <ui-checkbox v-model="showPost">
             Отобразить пост
           </ui-checkbox>
         </div>
         <div class="post--field">
-          <ui-checkbox>
+          <ui-checkbox v-model="showAllPost">
             Пост виден всем
           </ui-checkbox>
+        </div>
+        <div v-if="addWarning" class="post--field error">
+          {{ addWarning }}
+        </div>
+        <div class="post--field">
+          <ui-button type="click" color="success" @click="addPostBtn">Добавить</ui-button>
         </div>
       </div>
     </div>
@@ -43,6 +49,8 @@
 import Header from "@/components/Header"
 import Folders from "@/components/Folders"
 import CkEditor from "@/components/CkEditor"
+import {mapState, mapActions} from "vuex";
+import cyrillicToTranslit from "cyrillic-to-translit-js";
 
 export default {
   name: "PostView",
@@ -53,27 +61,55 @@ export default {
   },
   data() {
     return {
-      options: [
-        {
-          value: 'sdf',
-          text: 'sd f',
-        },
-        {
-          value: 'ssd fsddf',
-          text: 'sdsd fsdf f',
-        },
-        {
-          value: 'sdsdfsdf sdf',
-          text: 'sdsdf sdfsdf f',
-        },
-      ],
       title: "",
-      initialData: "Test Post"
+      description: "Test Post",
+      selected: "0",
+      showPost: true,
+      showAllPost: false,
+      addWarning: "",
+    }
+  },
+  computed: {
+    ...mapState("folders", ["folders"]),
+    folderList() {
+      const list = [{
+        value: '0',
+        text: 'Выберите категорию',
+      }]
+      if (this.folders.length) {
+        this.folders.forEach(item => {
+          list.push({
+            value: item.name,
+            text: item.title,
+          })
+        })
+      }
+      return list;
     }
   },
   methods: {
+    ...mapActions("posts", ["addPost"]),
     getContent(val) {
-      console.log(val);
+      this.description = val;
+    },
+    addPostBtn() {
+      const postData = {
+        title: this.title,
+        description: this.description,
+        show: this.showPost,
+        showAll: this.showAllPost,
+        folder: this.selected
+      }
+      this.addPost(postData)
+        .then(res => {
+          if (res?.data?.message) {
+            this.addWarning = res.data.message
+          } else {
+            this.addWarning = ""
+          }
+          console.log(res, "res");
+        })
+        .catch(err => console.log(err))
     }
   }
 }
@@ -95,6 +131,9 @@ export default {
       }
       &--field {
         margin-bottom: 14px;
+        &.error {
+          color: #cc0000;
+        }
         p {
           margin: 0;
           font-size: 14px;

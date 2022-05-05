@@ -1,34 +1,7 @@
 <template>
   <ul class="menu">
-    <li>
-      <router-link to="/">Теория</router-link>
-    </li>
-    <li>
-      <router-link to="/">Примеры</router-link>
-    </li>
-    <li>
-      <router-link to="/">ES6</router-link>
-    </li>
-    <li>
-      <router-link to="/">Архитектура</router-link>
-    </li>
-    <li>
-      <router-link to="/">TypeScript</router-link>
-    </li>
-    <li>
-      <router-link to="/">NODE</router-link>
-    </li>
-    <li>
-      <router-link to="/">Тесты</router-link>
-    </li>
-    <li>
-      <router-link to="/">Ссылки на материалы</router-link>
-    </li>
-    <li>
-      <router-link to="/">Задачки</router-link>
-    </li>
-    <li>
-      <router-link to="/">Сниппеты</router-link>
+    <li v-for="item in folders" :key="item._id">
+      <router-link to="/">{{ item.title }}</router-link>
     </li>
     <li>
       <hr>
@@ -43,9 +16,20 @@
 </template>
 
 <script>
-  export default {
-    name: "Folder"
+import {mapActions, mapState} from "vuex";
+
+export default {
+  name: "Folder",
+  computed: {
+    ...mapState("folders", ["folders"]),
+  },
+  methods: {
+    ...mapActions("folders", ["getFolder"])
+  },
+  mounted() {
+    this.getFolder()
   }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <select class="ui-select" v-model="selected">
+  <select class="ui-select" :value="modelValue" @input="updateSelect">
     <option v-for="(option) in options" :key="option.text" :value="option.value" :disabled="Boolean(option.disabled)">
       <span v-if="prefix">{{ prefix }}</span>
       <span>{{ option.text }}</span>
@@ -16,10 +16,7 @@ export default {
     event: 'input'
   },
   props: {
-    value: {
-      // type: [Object, Array, String, Number, Boolean],
-      // default: undefined
-    },
+    modelValue: [String, Number],
     options: {
       // type: [Object, Array, String, Number, Boolean],
       // default: undefined
@@ -29,22 +26,11 @@ export default {
       default: null
     }
   },
-  mounted() {
-    this.selected = this.value;
-  },
-  data() {
-    return {
-      selected: this.value,
-    };
-  },
-  watch: {
-    selected() {
-      this.$emit("input", this.selected);
-    },
-    value(value) {
-      this.selected = value;
+  methods: {
+    updateSelect(event) {
+      this.$emit("update:modelValue", event.target.value);
     }
-  }
+  },
 }
 </script>
 

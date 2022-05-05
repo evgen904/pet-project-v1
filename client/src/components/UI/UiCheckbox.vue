@@ -1,6 +1,6 @@
 <template>
-  <label class="ui-checkbox" :class="{ 'ui-checkbox--disabled': disabled }" cy-checkbox>
-    <input class="ui-checkbox--input" :disabled="disabled" type="checkbox" v-model="isChecked" :value="value" />
+  <label class="ui-checkbox" :class="{ 'ui-checkbox--disabled': disabled }">
+    <input class="ui-checkbox--input" :disabled="disabled" type="checkbox" @input="updateCheckbox" :value="modelValue" :checked="modelValue" />
     <span class="ui-checkbox--mark"></span>
     <span>
       <slot></slot>
@@ -17,48 +17,16 @@ export default {
     event: "input"
   },
   props: {
-    value: {
-      default: true
-    },
-    uncheckedValue: {
-      default: false
-    },
-    checked: {
-      default: false
-    },
+    modelValue: [Boolean],
     disabled: {
       type: Boolean,
     }
   },
-  data() {
-    return {
-      isChecked: false
-    };
-  },
-  mounted() {
-    this.selected = this.value;
-    if (this.value == this.checked) {
-      this.isChecked = true;
-    } else if (this.uncheckedValue == this.checked) {
-      this.isChecked = false;
-    } else {
-      this.isChecked = !!this.checked;
-    }
-  },
-  watch: {
-    isChecked() {
-      this.$emit("input", this.isChecked ? this.value : this.uncheckedValue);
+  methods: {
+    updateCheckbox(event) {
+      this.$emit("update:modelValue", event.target.checked);
     },
-    checked(value) {
-      if (this.value == value) {
-        this.isChecked = true;
-      } else if (this.uncheckedValue == value) {
-        this.isChecked = false;
-      } else {
-        this.isChecked = !!value;
-      }
-    }
-  }
+  },
 }
 </script>
 

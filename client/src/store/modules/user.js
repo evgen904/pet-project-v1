@@ -1,4 +1,4 @@
-import { Users } from "../../../api";
+import { Users } from "@/api";
 import axios from "axios";
 
 const state = () => ({

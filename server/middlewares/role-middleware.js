@@ -7,13 +7,13 @@ module.exports = function (roles) {
     }
 
     try {
-      const token = req.headers.authorization.split(' ')[1]
+      const token = req.headers.authorization.split(' ')[1];
       if (!token) {
         return res.status(403).json({message: 'Пользователь не авторизован'})
       } else {
         const userRules = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
         let hasRole = false
-        userRules.role.forEach(role => {
+        userRules.roles.forEach(role => {
           if (roles.includes(role)) {
             hasRole = true
           }
