@@ -36,8 +36,8 @@ class PostService {
     return PostData;
   }
 
-  async getPosts() {
-    const Post = PostModel.find();
+  async getPosts(folder) {
+    const Post = PostModel.find({folder});
     return Post;
   }
 }

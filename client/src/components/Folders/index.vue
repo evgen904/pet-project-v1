@@ -1,7 +1,10 @@
 <template>
   <ul class="menu">
     <li v-for="item in folders" :key="item._id">
-      <router-link to="/">{{ item.title }}</router-link>
+      <router-link :to="{
+          name: 'CardList',
+          params: { folder: item.name }
+        }">{{ item.title }}</router-link>
     </li>
     <li>
       <hr>
@@ -37,6 +40,8 @@ export default {
   padding: 0;
   margin: 0;
   list-style: none;
+  position: sticky;
+  top: 0;
   li {
     a {
       display: block;

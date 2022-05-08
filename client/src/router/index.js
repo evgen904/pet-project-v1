@@ -35,6 +35,18 @@ const routes = [
       ]
     }
   },
+  {
+    path: "/posts/",
+    name: "PostsView",
+    component: () => import("@/views/PostsView"),
+    children: [
+      {
+        path: '/posts/:folder',
+        name: "CardList",
+        component: () => import("@/components/CardList"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

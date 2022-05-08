@@ -27,6 +27,6 @@ router.get('/folder/get/', roleMiddleware(['USER', 'ADMIN']), folderController.g
 router.post('/post/add/', authMiddleware, postController.add);
 router.post('/post/remove/', authMiddleware, postController.remove);
 router.post('/post/set/', authMiddleware, postController.set);
-router.get('/post/get/', postController.getPosts);
+router.post('/post/get/', postController.getPosts);
 
 module.exports = router

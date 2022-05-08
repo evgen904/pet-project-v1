@@ -35,7 +35,8 @@ class PostController {
 
   async getPosts(req, res, next) {
     try {
-      const posts = await postService.getPosts();
+      const {folder} = req.body;
+      const posts = await postService.getPosts(folder);
       return res.json(posts)
     } catch (e) {
       next(e)
