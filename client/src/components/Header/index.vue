@@ -6,9 +6,34 @@
     <div class="header--btn">
       <ui-button v-if="!isAuth" @click="auth" color="primary">Войти</ui-button>
       <template v-else>
-        <ui-button @click="$router.push({name: 'FolderView'})" color="primary">Добавить категорию</ui-button>
-        <ui-button @click="$router.push({name: 'PostView'})" color="primary">Добавить пост</ui-button>
-        <ui-button @click="logout" color="default">Выйти</ui-button>
+        <div class="menu-item">
+          <div class="menu-item--name">
+            {{ user.email }}
+          </div>
+          <div class="menu-item--list">
+            <ul>
+              <li v-if="!user.isActivated">
+                <div class="activate-email">
+                  Подтвердите email для добавления постов, <br>
+                  ссылка для подтверждения отправлена на Ваш email
+                </div>
+                <hr>
+              </li>
+              <li>
+                <router-link :to="{name: 'FolderView'}">Редактирование категорий</router-link>
+              </li>
+              <li>
+                <router-link :to="{name: 'PostView'}">Редактирование постов</router-link>
+              </li>
+              <li>
+                <hr>
+              </li>
+              <li>
+                <span @click="logout">Выйти</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </template>
     </div>
   </div>
@@ -40,7 +65,7 @@ import {mapActions, mapState} from "vuex";
 export default {
   name: "Header",
   computed: {
-    ...mapState("user", ["isAuth"])
+    ...mapState("user", ["isAuth", "user"])
   },
   data() {
     return {
@@ -147,6 +172,69 @@ export default {
     display: flex;
     justify-content: space-between;
     padding-top: 10px;
+  }
+}
+.menu-item {
+  position: relative;
+  &--name {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: .3s background ease;
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+  &--list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    background: #fff;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    ul {
+      padding: 10px 0;
+      margin: 0;
+      list-style: none;
+      li {
+        > a, > span {
+          display: block;
+          cursor: pointer;
+          padding: 8px 20px;
+          color: #000000;
+          font-size: 14px;
+          text-decoration: none;
+          transition: .3s background ease;
+          &:hover {
+            background: #f0f0f0;
+          }
+        }
+        .activate-email {
+          color: #cc0000;
+          font-size: 14px;
+          padding: 8px 20px;
+        }
+        hr {
+          padding: 0;
+          margin: 10px 0;
+          height: 1px;
+          border: none;
+          background: #ccc;
+        }
+      }
+    }
+  }
+  &:hover {
+    .menu-item--name {
+      background: #f0f0f0;
+    }
+    .menu-item--list {
+      display: block;
+    }
   }
 }
 </style>

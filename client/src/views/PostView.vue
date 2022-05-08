@@ -43,6 +43,51 @@
           </ui-button>
         </div>
       </div>
+      <div class="post">
+        <h2>
+          Редактирование постов
+        </h2>
+        <div class="post--list">
+          <ul>
+            <li>
+              <div class="post-name">
+                Name
+              </div>
+              <div class="post-del">
+                <ui-button type="click" color="success" @click="setFolderBtn(item._id)">Редактировать</ui-button>
+                <ui-button type="click" color="danger" @click="delFolderBtn(item._id)">Удалить</ui-button>
+              </div>
+            </li>
+            <li>
+              <div class="post-name">
+                Name
+              </div>
+              <div class="post-del">
+                <ui-button type="click" color="success" @click="setFolderBtn(item._id)">Редактировать</ui-button>
+                <ui-button type="click" color="danger" @click="delFolderBtn(item._id)">Удалить</ui-button>
+              </div>
+            </li>
+            <li>
+              <div class="post-name">
+                Name
+              </div>
+              <div class="post-del">
+                <ui-button type="click" color="success" @click="setFolderBtn(item._id)">Редактировать</ui-button>
+                <ui-button type="click" color="danger" @click="delFolderBtn(item._id)">Удалить</ui-button>
+              </div>
+            </li>
+            <li>
+              <div class="post-name">
+                Name
+              </div>
+              <div class="post-del">
+                <ui-button type="click" color="success" @click="setFolderBtn(item._id)">Редактировать</ui-button>
+                <ui-button type="click" color="danger" @click="delFolderBtn(item._id)">Удалить</ui-button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -172,6 +217,7 @@ export default {
   &--content {
     grid-area: content;
     .post {
+      margin-bottom: 30px;
       h2 {
         margin-bottom: 20px;
       }
@@ -187,6 +233,36 @@ export default {
         }
         .ui-select {
           max-width: 400px;
+        }
+      }
+      &--list {
+        ul {
+          padding: 0;
+          margin: 0;
+          list-style: none;
+          li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f0f0f0;
+            margin-bottom: 10px;
+            .post-name {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              font-size: 18px;
+              padding-left: 10px;
+            }
+            .post-del {
+              margin-left: 10px;
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: flex-start;
+              .ui-btn {
+                margin-left: 10px;
+              }
+            }
+          }
         }
       }
     }
