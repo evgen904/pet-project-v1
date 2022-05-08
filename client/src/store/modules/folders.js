@@ -47,7 +47,16 @@ const actions = {
       .catch(err => {
         console.log(err)
       })
-  }
+  },
+  getFoldersUser({commit}) {
+    return Folders.getFoldersUser()
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
 };
 
 const mutations = {

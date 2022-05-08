@@ -41,6 +41,16 @@ class FolderController {
       next(e)
     }
   }
+
+  async getFoldersUser(req, res, next) {
+    try {
+      const {refreshToken} = req.cookies;
+      const folders = await folderService.getFoldersUser(refreshToken);
+      return res.json(folders)
+    } catch (e) {
+      next(e)
+    }
+  }
 }
 
 module.exports = new FolderController();

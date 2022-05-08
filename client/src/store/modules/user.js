@@ -8,7 +8,10 @@ const state = () => ({
 });
 
 const getters = {
-
+  isAdmin: (state) => {
+    if (!state.user) return false;
+    return state.user.roles.find(item => item === "ADMIN") ? true : false;
+  },
 };
 
 const actions = {

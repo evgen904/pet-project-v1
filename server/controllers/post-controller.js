@@ -15,8 +15,8 @@ class PostController {
 
   async remove(req, res, next) {
     try {
-      const {name} = req.body;
-      const postData = await postService.removePost(name)
+      const {_id} = req.body;
+      const postData = await postService.removePost(_id)
       return res.json(postData)
     } catch (e) {
       next(e)
@@ -47,6 +47,16 @@ class PostController {
     try {
       const {folder} = req.body;
       const posts = await postService.getPosts(folder);
+      return res.json(posts)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async getPostsUser(req, res, next) {
+    try {
+      const {refreshToken} = req.cookies;
+      const posts = await postService.getPostsUser(refreshToken);
       return res.json(posts)
     } catch (e) {
       next(e)

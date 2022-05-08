@@ -23,11 +23,13 @@ router.post('/folder/add/', authMiddleware, folderController.add);
 router.post('/folder/remove/', authMiddleware, folderController.remove);
 router.post('/folder/set/', authMiddleware, folderController.set);
 router.get('/folder/get/', roleMiddleware(['USER', 'ADMIN']), folderController.getFolders);
+router.get('/folder/getFoldersUser/', folderController.getFoldersUser);
 
 router.post('/post/add/', authMiddleware, postController.add);
 router.post('/post/remove/', authMiddleware, postController.remove);
 router.post('/post/set/', authMiddleware, postController.set);
 router.post('/post/edit/', authMiddleware, postController.edit);
 router.post('/post/get/', postController.getPosts);
+router.get('/post/getPostsUser/', postController.getPostsUser);
 
 module.exports = router

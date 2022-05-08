@@ -20,12 +20,12 @@
         <div class="folder--list">
           <ul>
             <transition-group name="list">
-              <li v-for="item in foldersLocal" :key="item._id">
+              <li v-for="item in folders" :key="item._id">
                 <div class="folder-name">
                   <div class="folder-input">
                     <ui-input :isBlock="true" v-model.trim="item.title" type="text" placeholder="Название категории" />
                   </div>
-                  <div class="folder-type">
+                  <div v-if="isAdmin" class="folder-type">
                     <ui-checkbox v-model="item.isPublic">
                       Публичная категория
                     </ui-checkbox>
@@ -48,7 +48,7 @@
 import Header from "@/components/Header"
 import Folders from "@/components/Folders"
 import cyrillicToTranslit from "cyrillic-to-translit-js"
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapState, mapGetters} from "vuex";
 
 export default {
   name: "FolderView",
@@ -61,22 +61,26 @@ export default {
       titleFolder: "",
       nameFolder: "",
       addWarning: "",
-      foldersLocal: [],
+      folders: [],
     }
   },
   mounted() {
-    this.foldersLocal = JSON.parse(JSON.stringify(this.folders))
-  },
-  watch: {
-    folders(val) {
-      this.foldersLocal = JSON.parse(JSON.stringify(val))
-    }
+    this.initFolders()
   },
   computed: {
-    ...mapState("folders", ["folders"]),
+    ...mapGetters("user", ["isAdmin"]),
   },
   methods: {
-    ...mapActions("folders", ["addFolder", "setFolder", "removeFolder", "getFolder"]),
+    ...mapActions("folders", ["addFolder", "setFolder", "removeFolder", "getFolder", "getFoldersUser"]),
+    initFolders() {
+      this.getFoldersUser()
+        .then(res => {
+          if (res.data.length) {
+            this.folders = res.data
+          }
+        })
+        .catch(err => conosle.log(err))
+    },
     addFolderBtn() {
       const addFolder = {
         name: cyrillicToTranslit().transform(this.titleFolder.toLocaleLowerCase(), "_"),
@@ -91,13 +95,13 @@ export default {
           }
           if (res?.data?.folderData?.name) {
             this.titleFolder = ""
-            this.getFolder()
+            this.initFolders()
           }
         })
         .catch(err => console.log(err))
     },
     setFolderBtn(id) {
-      const folderEdit = this.foldersLocal.find(item => item._id === id);
+      const folderEdit = this.folders.find(item => item._id === id);
       this.setFolder({
         name: cyrillicToTranslit().transform(folderEdit.title.toLocaleLowerCase(), "_"),
         title: folderEdit.title,
@@ -114,9 +118,8 @@ export default {
       this.removeFolder({_id: id})
         .then(res => {
           if (res?.data?.deletedCount) {
-            let indexFolder = this.foldersLocal.findIndex(item => item._id === id)
-            this.foldersLocal.splice(indexFolder, 1)
-            this.getFolder()
+            let indexFolder = this.folders.findIndex(item => item._id === id)
+            this.folders.splice(indexFolder, 1)
           }
         })
         .catch(err => console.log(err))
@@ -139,9 +142,6 @@ export default {
   opacity: 0;
   transform: translateX(130px);
 }
-/*.flip-list-move {*/
-/*  transition: transform 0.4s ease;*/
-/*}*/
 
 .edit-folders {
   display: grid;

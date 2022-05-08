@@ -35,6 +35,12 @@ class FolderService {
     const folder = FolderModel.find();
     return folder;
   }
+
+  async getFoldersUser(refreshToken) {
+    const userData = await tokenService.validateRefreshToken(refreshToken);
+    const folder = FolderModel.find({user: userData.id});
+    return folder;
+  }
 }
 
 module.exports = new FolderService()

@@ -1,5 +1,6 @@
 import { Posts } from "@/api";
 import getPosts from "@/api/posts/getPosts";
+import getPostsUser from "@/api/posts/getPostsUser";
 
 const state = () => ({
   posts: [],
@@ -21,6 +22,24 @@ const actions = {
   },
   getPosts({commit}, payload) {
     return Posts.getPosts(payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  getPostsUser({commit}) {
+    return Posts.getPostsUser()
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  removePost({commit}, payload) {
+    return Posts.removePost(payload)
       .then(res => {
         return res;
       })

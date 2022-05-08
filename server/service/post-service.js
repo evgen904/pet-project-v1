@@ -39,17 +39,23 @@ class PostService {
     return Post;
   }
 
-  async removePost(name) {
-    const Post = await PostModel.findOne({name})
+  async removePost(_id) {
+    const Post = await PostModel.findOne({_id})
     if (!Post) {
-      throw ApiError.BadRequest(`Поста ${name} нет в списке`)
+      throw ApiError.BadRequest(`Поста ${id} нет в списке`)
     }
-    const PostData = await PostModel.deleteOne({name});
+    const PostData = await PostModel.deleteOne({_id});
     return PostData;
   }
 
   async getPosts(folder) {
     const Post = PostModel.find({folder});
+    return Post;
+  }
+
+  async getPostsUser(refreshToken) {
+    const userData = await tokenService.validateRefreshToken(refreshToken);
+    const Post = PostModel.find({user: userData.id});
     return Post;
   }
 }
