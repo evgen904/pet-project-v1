@@ -11,6 +11,10 @@ const FolderSchema = new Schema({
     unique: true,
     required: true
   },
+  isPublic: {
+    type: Boolean,
+    default: false
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'

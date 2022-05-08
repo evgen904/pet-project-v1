@@ -74,7 +74,22 @@ export default {
         .catch(err => console.log(err))
     },
     registration() {
-
+      const dataUser = {
+        email: this.email,
+        password: this.password,
+      }
+      this.userRegistration(dataUser)
+        .then(res => {
+          if (res?.data?.message) {
+            this.warningAuth = res.data.message
+          } else {
+            this.warningAuth = ""
+          }
+          if (res?.data?.accessToken) {
+            this.modalVisible = false
+          }
+        })
+        .catch(err => console.log(err))
     },
     logout() {
       this.userLogout()

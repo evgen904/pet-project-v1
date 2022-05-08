@@ -15,8 +15,8 @@ class FolderController {
 
   async remove(req, res, next) {
     try {
-      const {name} = req.body;
-      const folderData = await folderService.removeFolder(name)
+      const {_id} = req.body;
+      const folderData = await folderService.removeFolder(_id)
       return res.json(folderData)
     } catch (e) {
       next(e)
@@ -25,8 +25,8 @@ class FolderController {
 
   async set(req, res, next) {
     try {
-      const {name, title} = req.body;
-      const folderData = await folderService.setFolder(name, title);
+      const {name, title, isPublic} = req.body;
+      const folderData = await folderService.setFolder(name, title, isPublic);
       return res.json(folderData)
     } catch (e) {
       next(e)

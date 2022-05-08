@@ -27,13 +27,14 @@ const actions = {
       })
   },
   userRegistration({commit}, payload) {
-    Users.registration(payload)
+    return Users.registration(payload)
       .then(res => {
         if (res.data.accessToken) {
           localStorage.setItem("token", res.data.accessToken)
           commit("setIsAuth", true)
           commit("setUser", res.data.user)
         }
+        return res;
       })
       .catch(err => console.log(err, "registration"))
   },

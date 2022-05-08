@@ -6,15 +6,6 @@
           params: { folder: item.name }
         }">{{ item.title }}</router-link>
     </li>
-    <li>
-      <hr>
-    </li>
-    <li>
-      <router-link to="/">Мусор</router-link>
-    </li>
-    <li>
-      <router-link to="/">Todo list</router-link>
-    </li>
   </ul>
 </template>
 

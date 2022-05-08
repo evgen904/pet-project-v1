@@ -18,6 +18,24 @@ const actions = {
         console.log(err)
       })
   },
+  setFolder({commit}, payload) {
+    return Folders.setFolder(payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  removeFolder({commit}, payload) {
+    return Folders.removeFolder(payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
   getFolder({commit}) {
     return Folders.getFolders()
       .then(res => {

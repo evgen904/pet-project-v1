@@ -13,21 +13,21 @@ class FolderService {
     return { folderData }
   }
 
-  async setFolder(name, title) {
+  async setFolder(name, title, isPublic) {
     const folder = await FolderModel.findOne({name})
     if (!folder) {
       throw ApiError.BadRequest(`Категории ${name} нет в списке`)
     }
-    const folderData = await folder.updateOne({name, title})
+    const folderData = await folder.updateOne({name, title, isPublic})
     return { folderData }
   }
 
-  async removeFolder(name) {
-    const folder = await FolderModel.findOne({name})
+  async removeFolder(_id) {
+    const folder = await FolderModel.findOne({_id})
     if (!folder) {
-      throw ApiError.BadRequest(`Категории ${name} нет в списке`)
+      throw ApiError.BadRequest(`Категории ${_id} нет в списке`)
     }
-    const folderData = await FolderModel.deleteOne({name});
+    const folderData = await FolderModel.deleteOne({_id});
     return folderData;
   }
 

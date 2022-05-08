@@ -15,6 +15,31 @@
         </div>
         <ui-button type="click" color="success" @click="addFolderBtn">Добавить</ui-button>
       </div>
+      <div class="folder">
+        <h2>Редактировать категории</h2>
+        <div class="folder--list">
+          <ul>
+            <transition-group name="list">
+              <li v-for="item in foldersLocal" :key="item._id">
+                <div class="folder-name">
+                  <div class="folder-input">
+                    <ui-input :isBlock="true" v-model.trim="item.title" type="text" placeholder="Название категории" />
+                  </div>
+                  <div class="folder-type">
+                    <ui-checkbox v-model="item.isPublic">
+                      Публичная категория
+                    </ui-checkbox>
+                  </div>
+                </div>
+                <div class="folder-del">
+                  <ui-button type="click" color="success" @click="setFolderBtn(item._id)">Сохранить</ui-button>
+                  <ui-button type="click" color="danger" @click="delFolderBtn(item._id)">Удалить</ui-button>
+                </div>
+              </li>
+            </transition-group>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -36,10 +61,22 @@ export default {
       titleFolder: "",
       nameFolder: "",
       addWarning: "",
+      foldersLocal: [],
     }
   },
+  mounted() {
+    this.foldersLocal = JSON.parse(JSON.stringify(this.folders))
+  },
+  watch: {
+    folders(val) {
+      this.foldersLocal = JSON.parse(JSON.stringify(val))
+    }
+  },
+  computed: {
+    ...mapState("folders", ["folders"]),
+  },
   methods: {
-    ...mapActions("folders", ["addFolder"]),
+    ...mapActions("folders", ["addFolder", "setFolder", "removeFolder", "getFolder"]),
     addFolderBtn() {
       const addFolder = {
         name: cyrillicToTranslit().transform(this.titleFolder.toLocaleLowerCase(), "_"),
@@ -54,15 +91,58 @@ export default {
           }
           if (res?.data?.folderData?.name) {
             this.titleFolder = ""
+            this.getFolder()
           }
         })
         .catch(err => console.log(err))
     },
+    setFolderBtn(id) {
+      const folderEdit = this.foldersLocal.find(item => item._id === id);
+      this.setFolder({
+        name: cyrillicToTranslit().transform(folderEdit.title.toLocaleLowerCase(), "_"),
+        title: folderEdit.title,
+        isPublic: folderEdit.isPublic
+      })
+        .then(res => {
+          if (res.data.folderData) {
+            console.log('folderData')
+          }
+        })
+        .catch(err => console.log(err))
+    },
+    delFolderBtn(id) {
+      this.removeFolder({_id: id})
+        .then(res => {
+          if (res?.data?.deletedCount) {
+            let indexFolder = this.foldersLocal.findIndex(item => item._id === id)
+            this.foldersLocal.splice(indexFolder, 1)
+            this.getFolder()
+          }
+        })
+        .catch(err => console.log(err))
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(130px);
+}
+/*.flip-list-move {*/
+/*  transition: transform 0.4s ease;*/
+/*}*/
+
 .edit-folders {
   display: grid;
   grid-template-columns: 1fr 240px 20px minmax(100px, 1000px) 1fr;
@@ -76,6 +156,7 @@ export default {
       margin-bottom: 20px;
     }
     .folder {
+      margin-bottom: 40px;
       &--field {
         margin-bottom: 10px;
       }
@@ -83,6 +164,39 @@ export default {
         font-size: 14px;
         color: #cc0000;
         margin-bottom: 10px;
+      }
+      &--list {
+        ul {
+          padding: 0;
+          margin: 0;
+          list-style: none;
+          li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f0f0f0;
+            margin-bottom: 10px;
+            .folder-name {
+              width: 100%;
+            }
+            .folder-input {
+
+            }
+            .folder-del {
+              margin-left: 10px;
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: flex-start;
+              .ui-btn {
+                margin-left: 10px;
+              }
+            }
+            .folder-type {
+              padding-top: 10px;
+              margin-bottom: -6px;
+            }
+          }
+        }
       }
     }
   }
