@@ -7,7 +7,7 @@
     <div class="edit-post--content">
       <div class="post">
         <h2>
-          Добавить пост
+          {{ titlePage }}
         </h2>
         <div class="post--field">
           <p>
@@ -19,7 +19,7 @@
           <p>
             Категория для поста
           </p>
-          <ui-select v-model="selected" :options="folderList" />
+          <ui-select v-model="selectedFolder" :options="folderList" />
         </div>
         <div class="post--field">
           <CkEditor @sendContent="getContent" :content="description" />
@@ -38,7 +38,9 @@
           {{ addWarning }}
         </div>
         <div class="post--field">
-          <ui-button type="click" color="success" @click="addPostBtn">Добавить</ui-button>
+          <ui-button type="click" color="success" @click="sendPost">
+            {{ btnSend }}
+          </ui-button>
         </div>
       </div>
     </div>
@@ -62,15 +64,29 @@ export default {
   data() {
     return {
       title: "",
-      description: "Test Post",
-      selected: "0",
+      description: "",
+      selectedFolder: "0",
       showPost: true,
       showAllPost: false,
       addWarning: "",
     }
   },
+  mounted() {
+    if (this.isEdit) {
+      this.editData(this.$route.params.id)
+    }
+  },
   computed: {
     ...mapState("folders", ["folders"]),
+    isEdit() {
+      return this.$route?.params?.id ? true : false
+    },
+    titlePage() {
+      return this.isEdit ? "Редактировать пост" : "Добавить пост"
+    },
+    btnSend() {
+      return this.isEdit ? "Сохранить" : "Добавить"
+    },
     folderList() {
       const list = [{
         value: '0',
@@ -88,26 +104,56 @@ export default {
     }
   },
   methods: {
-    ...mapActions("posts", ["addPost"]),
+    ...mapActions("posts", ["addPost", "setPost", "editPost"]),
     getContent(val) {
       this.description = val;
     },
-    addPostBtn() {
+    sendPost() {
       const postData = {
         title: this.title,
         description: this.description,
         show: this.showPost,
         showAll: this.showAllPost,
-        folder: this.selected
+        folder: this.selectedFolder
       }
-      this.addPost(postData)
+      if (!this.isEdit) {
+        this.addPost(postData)
+          .then(res => {
+            if (res?.data?.message) {
+              this.addWarning = res.data.message
+            } else {
+              this.addWarning = ""
+            }
+            console.log(res, "res");
+          })
+          .catch(err => console.log(err))
+      } else {
+        postData._id = this.$route.params.id;
+        this.setPost(postData)
+          .then(res => {
+            if (res?.data?.message) {
+              this.addWarning = res.data.message
+            } else {
+              this.addWarning = ""
+            }
+            console.log(res, "res");
+          })
+          .catch(err => console.log(err))
+      }
+    },
+    editData(id) {
+      this.editPost({_id: id})
         .then(res => {
           if (res?.data?.message) {
             this.addWarning = res.data.message
-          } else {
+          } else if (res.data.length) {
             this.addWarning = ""
+            this.title = res.data[0]["title"]
+            this.description = res.data[0]["description"]
+            this.selectedFolder = res.data[0]["folder"]
+            this.showPost = res.data[0]["show"]
+            this.showAllPost = res.data[0]["showAll"]
           }
-          console.log(res, "res");
         })
         .catch(err => console.log(err))
     }

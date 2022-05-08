@@ -23,9 +23,9 @@ export default {
         emit("sendContent", ckeditor.getData())
       })
     })
-    watch(content, () => {
-      if (content.value !== ckeditor.getData()) {
-        ckeditor.setData(content.value);
+    watch(() => props.content, (first, second) => {
+      if (first !== ckeditor.getData()) {
+        ckeditor.setData(first);
       }
     })
   }

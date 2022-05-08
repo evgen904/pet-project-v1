@@ -28,6 +28,24 @@ const actions = {
         console.log(err)
       })
   },
+  editPost({commit}, payload) {
+    return Posts.editPost(payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  setPost({commit}, payload) {
+    return Posts.setPost(payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
 };
 
 const mutations = {

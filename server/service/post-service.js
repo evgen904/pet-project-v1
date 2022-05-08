@@ -4,7 +4,7 @@ const ApiError = require('../exceptions/api-error')
 const tokenService = require('./token-service.js')
 
 class PostService {
-  async addPost (refreshToken, title, description, folder) {
+  async addPost (refreshToken, title, description, folder, show, showAll) {
     const post = await PostModel.findOne({title})
     if (post) {
       throw ApiError.BadRequest(`Пост ${title} уже создан`)
@@ -14,17 +14,29 @@ class PostService {
       throw ApiError.BadRequest(`Категории ${folder} нет`)
     }
     const userData = await tokenService.validateRefreshToken(refreshToken);
-    const postData = await PostModel.create({user: userData.id, title, description, folder: folderName.name})
+    const postData = await PostModel.create({user: userData.id, title, description, folder: folderName.name, show, showAll})
     return { postData }
   }
 
-  async setPost(name, title) {
-    const Post = await PostModel.findOne({name})
+  async setPost(_id, title, description, folder, show, showAll) {
+    const Post = await PostModel.findOne({_id})
     if (!Post) {
       throw ApiError.BadRequest(`Поста ${name} нет в списке`)
     }
-    const PostData = await Post.updateOne({name, title})
+    const folderName = await FolderModel.findOne({name: folder})
+    if (!folderName) {
+      throw ApiError.BadRequest(`Категории ${folder} нет`)
+    }
+    const PostData = await Post.updateOne({title, description, folder: folderName.name, show, showAll})
     return { PostData }
+  }
+
+  async editPost(_id) {
+    const Post = PostModel.find({_id});
+    if (!Post) {
+      throw ApiError.BadRequest(`Поста ${_id} нет`)
+    }
+    return Post;
   }
 
   async removePost(name) {
