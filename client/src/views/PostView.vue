@@ -50,12 +50,33 @@
         <div class="post--list">
           <ul>
             <transition-group name="list">
-              <li v-for="item in posts" :key="item.id" :class="{'active': item.id === $route.params.id}">
+              <li v-for="(item, index) in posts" :key="item.id" :class="{'active': item.id === $route.params.id}">
                 <div class="post-name">
                   {{ item.title }}
                 </div>
                 <div class="post-del">
-                  <ui-button v-if="isAdmin" type="click" color="success" @click="publishPostBtn(item.id)">Опубликовать</ui-button>
+                  <ui-button v-if="isAdmin" type="click" color="success" @click="publishPostBtn(item.id, index)">Опубликовать</ui-button>
+                  <ui-button type="click" color="success" @click="setPostBtn(item.id)">Редактировать</ui-button>
+                  <ui-button type="click" color="danger" @click="delPostBtn(item.id)">Удалить</ui-button>
+                </div>
+              </li>
+            </transition-group>
+          </ul>
+        </div>
+      </div>
+      <div class="post" v-if="postsModeration.length">
+        <h2>
+          Посты на модерацию
+        </h2>
+        <div class="post--list">
+          <ul>
+            <transition-group name="list">
+              <li v-for="(item, index) in postsModeration" :key="item.id" :class="{'active': item.id === $route.params.id}">
+                <div class="post-name">
+                  {{ item.title }}
+                </div>
+                <div class="post-del">
+                  <ui-button v-if="isAdmin" type="click" color="success" @click="publishPostBtn(item.id, index)">Опубликовать</ui-button>
                   <ui-button type="click" color="success" @click="setPostBtn(item.id)">Редактировать</ui-button>
                   <ui-button type="click" color="danger" @click="delPostBtn(item.id)">Удалить</ui-button>
                 </div>
@@ -90,7 +111,8 @@ export default {
       showPost: true,
       showAllPost: false,
       addWarning: "",
-      posts: []
+      posts: [],
+      postsModeration: [],
     }
   },
   watch: {
@@ -107,10 +129,14 @@ export default {
       this.editData(this.$route.params.id)
     }
     this.initPosts()
+    if (this.isAdmin) {
+      this.loadPostsModeration()
+    }
   },
   computed: {
     ...mapState("folders", ["folders"]),
     ...mapGetters("user", ["isAdmin"]),
+    ...mapState("user", ["user"]),
     isEdit() {
       return this.$route?.params?.id ? true : false
     },
@@ -137,7 +163,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("posts", ["addPost", "setPost", "editPost", "getPostsUser", "removePost"]),
+    ...mapActions("posts", ["addPost", "setPost", "editPost", "getPostsUser", "removePost", "getPostsModeration", "setPublishPost"]),
     getContent(val) {
       this.description = val;
     },
@@ -152,6 +178,21 @@ export default {
               }
             })
             this.posts = posts
+          }
+        })
+        .catch(err => console.log(err))
+    },
+    loadPostsModeration() {
+      this.getPostsModeration()
+        .then(res => {
+          if (res.data.length) {
+            const posts = res.data.filter(item => item.user !== this.user.id).map(item => {
+              return {
+                id: item._id,
+                title: item.title
+              }
+            })
+            this.postsModeration = posts
           }
         })
         .catch(err => console.log(err))
@@ -223,8 +264,14 @@ export default {
         })
         .catch(err => console.log(err))
     },
-    publishPostBtn(id) {
-      console.log(id);
+    publishPostBtn(id, index) {
+      this.setPublishPost({_id: id})
+        .then(res => {
+          if (res.data.modifiedCount) {
+
+          }
+        })
+        .catch(err => console.log(err))
     }
   }
 }

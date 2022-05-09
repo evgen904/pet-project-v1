@@ -53,6 +53,26 @@ class PostController {
     }
   }
 
+  async getPostsModeration(req, res, next) {
+    try {
+      const {refreshToken} = req.cookies;
+      const posts = await postService.getPostsModeration(refreshToken);
+      return res.json(posts)
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  async setPublishPost(req, res, next) {
+    try {
+      const {_id} = req.body;
+      const posts = await postService.setPublishPost(_id);
+      return res.json(posts)
+    } catch (e) {
+      next(e)
+    }
+  }
+
   async getPostsUser(req, res, next) {
     try {
       const {refreshToken} = req.cookies;

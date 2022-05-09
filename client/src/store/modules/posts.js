@@ -20,6 +20,15 @@ const actions = {
         console.log(err)
       })
   },
+  setPublishPost({commit}, payload) {
+    return Posts.setPublishPost(payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
   getPosts({commit}, payload) {
     return Posts.getPosts(payload)
       .then(res => {
@@ -31,6 +40,15 @@ const actions = {
   },
   getPostsUser({commit}) {
     return Posts.getPostsUser()
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
+  getPostsModeration({commit}) {
+    return Posts.getPostsModeration()
       .then(res => {
         return res;
       })

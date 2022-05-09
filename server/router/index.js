@@ -30,6 +30,8 @@ router.post('/post/remove/', authMiddleware, postController.remove);
 router.post('/post/set/', authMiddleware, postController.set);
 router.post('/post/edit/', authMiddleware, postController.edit);
 router.post('/post/get/', postController.getPosts);
+router.get('/post/getPostsModeration/', roleMiddleware(['ADMIN', 'MODERATOR']), postController.getPostsModeration);
+router.post('/post/setPublishPost/', roleMiddleware(['ADMIN', 'MODERATOR']), postController.setPublishPost);
 router.get('/post/getPostsUser/', postController.getPostsUser);
 
 module.exports = router

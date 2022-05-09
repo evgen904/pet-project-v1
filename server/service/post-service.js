@@ -58,6 +58,21 @@ class PostService {
     const Post = PostModel.find({user: userData.id});
     return Post;
   }
+
+  async getPostsModeration(refreshToken) {
+    const userData = await tokenService.validateRefreshToken(refreshToken);
+    const Post = PostModel.find({status: 'moderation'});
+    return Post;
+  }
+
+  async setPublishPost(_id) {
+    const Post = await PostModel.findOne({_id})
+    if (!Post) {
+      throw ApiError.BadRequest(`Поста ${id} нет в списке`)
+    }
+    const PostData = await Post.updateOne({'status': 'active'});
+    return PostData;
+  }
 }
 
 module.exports = new PostService()
