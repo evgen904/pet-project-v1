@@ -1,7 +1,9 @@
 <template>
   <div class="header">
     <div class="header--title">
-      Шпаргалка по JS
+      <router-link to="/">
+        Шпаргалка по JS
+      </router-link>
     </div>
     <div class="header--btn">
       <ui-button v-if="!isAuth" @click="auth" color="primary">Войти</ui-button>
@@ -16,6 +18,15 @@
                 <div class="activate-email">
                   Подтвердите email для добавления постов, <br>
                   ссылка для подтверждения отправлена на Ваш email
+                </div>
+                <hr>
+              </li>
+              <li>
+                <div class="type-user">
+                  Тип пользователя:
+                  <span v-for="item in user.roles" :key="item.id">
+                    {{ item }}
+                  </span>
                 </div>
                 <hr>
               </li>
@@ -60,7 +71,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapState, mapMutations} from "vuex";
 
 export default {
   name: "Header",
@@ -77,6 +88,8 @@ export default {
   },
   methods: {
     ...mapActions("user", ["userLogin", "userRegistration", "userLogout"]),
+    ...mapActions("folders", ["getFoldersUser"]),
+    ...mapMutations("folders", ["setFoldersUser"]),
     auth() {
       this.modalVisible = true
     },
@@ -95,6 +108,7 @@ export default {
           if (res?.data?.accessToken) {
             this.modalVisible = false
           }
+          this.getFoldersUser()
         })
         .catch(err => console.log(err))
     },
@@ -118,6 +132,7 @@ export default {
     },
     logout() {
       this.userLogout()
+      this.setFoldersUser([])
       this.$router.push({
         name: "JsView"
       })
@@ -139,6 +154,10 @@ export default {
     align-self: center;
     font-size: 20px;
     font-weight: bold;
+    a {
+      color: #000000;
+      text-decoration: none;
+    }
   }
   &--btn {
     grid-area: btn;
@@ -215,6 +234,11 @@ export default {
         }
         .activate-email {
           color: #cc0000;
+          font-size: 14px;
+          padding: 8px 20px;
+        }
+        .type-user {
+          color: #000;
           font-size: 14px;
           padding: 8px 20px;
         }

@@ -49,7 +49,13 @@ class PostService {
   }
 
   async getPosts(folder) {
-    const Post = PostModel.find({folder});
+    const Post = PostModel.find({folder, status: 'active'});
+    return Post;
+  }
+
+  async getPostsFolderUser(refreshToken, folder) {
+    const userData = await tokenService.validateRefreshToken(refreshToken);
+    const Post = PostModel.find({folder, user: userData.id});
     return Post;
   }
 

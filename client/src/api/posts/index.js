@@ -1,5 +1,6 @@
-import addPost from "./setPublishPost"
+import addPost from "./addPost"
 import getPosts from "./getPosts"
+import getPostsFolderUser from "./getPostsFolderUser"
 import editPost from "./editPost"
 import setPost from "./setPost"
 import getPostsUser from "./getPostsUser"
@@ -10,6 +11,7 @@ import setPublishPost from "./setPublishPost"
 export default {
   addPost,
   getPosts,
+  getPostsFolderUser,
   editPost,
   setPost,
   getPostsUser,

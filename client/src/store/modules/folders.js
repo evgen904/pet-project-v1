@@ -1,7 +1,8 @@
 import { Folders } from "@/api";
 
 const state = () => ({
-  folders: [],
+  foldersAll: [],
+  foldersUser: [],
 });
 
 const getters = {
@@ -36,11 +37,11 @@ const actions = {
         console.log(err)
       })
   },
-  getFolder({commit}) {
-    return Folders.getFolders()
+  getFoldersAll({commit}) {
+    return Folders.getFoldersAll()
       .then(res => {
         if (res?.data) {
-          commit("setFolders", res.data);
+          commit("setFoldersAll", res.data);
         }
         return res;
       })
@@ -51,6 +52,9 @@ const actions = {
   getFoldersUser({commit}) {
     return Folders.getFoldersUser()
       .then(res => {
+        if (res?.data) {
+          commit("setFoldersUser", res.data);
+        }
         return res;
       })
       .catch(err => {
@@ -60,8 +64,11 @@ const actions = {
 };
 
 const mutations = {
-  setFolders(state, value) {
-    state.folders = value
+  setFoldersAll(state, value) {
+    state.foldersAll = value
+  },
+  setFoldersUser(state, value) {
+    state.foldersUser = value
   },
 };
 

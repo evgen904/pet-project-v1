@@ -1,11 +1,28 @@
 <template>
   <ul class="menu">
-    <li v-for="item in folders" :key="item._id">
+    <li v-for="item in foldersAll" :key="item._id">
       <router-link :to="{
           name: 'CardList',
           params: { folder: item.name }
         }">{{ item.title }}</router-link>
     </li>
+    <template v-if="foldersUser.length">
+      <li>
+        <hr>
+        <div class="folder-name">
+          Свои категории
+        </div>
+      </li>
+      <li v-for="item in foldersUser" :key="item._id">
+        <router-link :to="{
+          name: 'CardList',
+          query: {
+            folder: 'user'
+          },
+          params: { folder: item.name }
+        }">{{ item.title }}</router-link>
+      </li>
+    </template>
   </ul>
 </template>
 
@@ -15,13 +32,17 @@ import {mapActions, mapState} from "vuex";
 export default {
   name: "Folder",
   computed: {
-    ...mapState("folders", ["folders"]),
+    ...mapState("user", ["isAuth"]),
+    ...mapState("folders", ["foldersAll", "foldersUser"]),
   },
   methods: {
-    ...mapActions("folders", ["getFolder"])
+    ...mapActions("folders", ["getFoldersAll", "getFoldersUser"])
   },
   mounted() {
-    this.getFolder()
+    this.getFoldersAll()
+    if (this.isAuth) {
+      this.getFoldersUser()
+    }
   }
 }
 </script>
@@ -50,6 +71,11 @@ export default {
       height: 1px;
       border: none;
       background: #ccc;
+    }
+    .folder-name {
+      color: #000000;
+      padding: 10px 12px;
+      font-weight: bold;
     }
   }
 }

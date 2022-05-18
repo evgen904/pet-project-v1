@@ -30,13 +30,26 @@ const actions = {
       })
   },
   getPosts({commit}, payload) {
-    return Posts.getPosts(payload)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    let folderName = {
+      folder: payload.folder
+    }
+    if (payload.isUserFolder) {
+      return Posts.getPostsFolderUser(folderName)
+        .then(res => {
+          return res;
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    } else {
+      return Posts.getPosts(folderName)
+        .then(res => {
+          return res;
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   },
   getPostsUser({commit}) {
     return Posts.getPostsUser()

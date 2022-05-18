@@ -32,13 +32,13 @@ class FolderService {
   }
 
   async getFolders() {
-    const folder = FolderModel.find();
+    const folder = FolderModel.find({isPublic: true});
     return folder;
   }
 
   async getFoldersUser(refreshToken) {
     const userData = await tokenService.validateRefreshToken(refreshToken);
-    const folder = FolderModel.find({user: userData.id});
+    const folder = FolderModel.find({user: userData.id, isPublic: false});
     return folder;
   }
 }

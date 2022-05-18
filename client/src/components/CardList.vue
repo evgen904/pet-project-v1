@@ -1,5 +1,8 @@
 <template>
   <Card v-for="item in posts" :key="item._id" :dataPost="item" />
+  <div v-if="!posts.length">
+    <h2>Постов нет</h2>
+  </div>
 </template>
 
 <script>
@@ -30,9 +33,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions("posts", ["getPosts"]),
+    ...mapActions("posts", ["getPosts", "getPostsFolderUser"]),
     init(val) {
-      this.getPosts({'folder': val})
+      let isUserFolder = this.$route.query?.folder === "user" ? true : false;
+      this.getPosts({'folder': val, isUserFolder})
         .then(res => {
           if (res.data.length) {
             this.posts = res.data;
@@ -43,6 +47,8 @@ export default {
                 });
               }, 100)
             }
+          } else {
+            this.posts = []
           }
         })
         .catch(err => console.log(err))

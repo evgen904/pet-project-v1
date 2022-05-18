@@ -53,6 +53,17 @@ class PostController {
     }
   }
 
+  async getPostsFolderUser(req, res, next) {
+    try {
+      const {folder} = req.body;
+      const {refreshToken} = req.cookies;
+      const posts = await postService.getPostsFolderUser(refreshToken, folder);
+      return res.json(posts)
+    } catch (e) {
+      next(e)
+    }
+  }
+
   async getPostsModeration(req, res, next) {
     try {
       const {refreshToken} = req.cookies;

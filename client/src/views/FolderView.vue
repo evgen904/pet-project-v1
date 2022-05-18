@@ -17,6 +17,32 @@
       </div>
       <div class="folder">
         <h2>Редактировать категории</h2>
+        <template v-if="isAdmin && foldersPublic.length">
+          <h3>Категории для всех</h3>
+          <div class="folder--list">
+            <ul>
+              <transition-group name="list">
+                <li v-for="item in foldersPublic" :key="item._id">
+                  <div class="folder-name">
+                    <div class="folder-input">
+                      <ui-input :isBlock="true" v-model.trim="item.title" type="text" placeholder="Название категории" />
+                    </div>
+                    <div v-if="isAdmin" class="folder-type">
+                      <ui-checkbox v-model="item.isPublic">
+                        Публичная категория
+                      </ui-checkbox>
+                    </div>
+                  </div>
+                  <div class="folder-del">
+                    <ui-button type="click" color="success" @click="setFolderBtn(item._id)">Сохранить</ui-button>
+                    <ui-button type="click" color="danger" @click="delFolderBtn(item._id)">Удалить</ui-button>
+                  </div>
+                </li>
+              </transition-group>
+            </ul>
+          </div>
+          <hr>
+        </template>
         <div class="folder--list">
           <ul>
             <transition-group name="list">
@@ -62,6 +88,7 @@ export default {
       nameFolder: "",
       addWarning: "",
       folders: [],
+      foldersPublic: [],
     }
   },
   mounted() {
@@ -71,7 +98,7 @@ export default {
     ...mapGetters("user", ["isAdmin"]),
   },
   methods: {
-    ...mapActions("folders", ["addFolder", "setFolder", "removeFolder", "getFolder", "getFoldersUser"]),
+    ...mapActions("folders", ["addFolder", "setFolder", "removeFolder", "getFolder", "getFoldersUser", "getFoldersAll"]),
     initFolders() {
       this.getFoldersUser()
         .then(res => {
@@ -79,7 +106,16 @@ export default {
             this.folders = res.data
           }
         })
-        .catch(err => conosle.log(err))
+        .catch(err => console.log(err))
+      if (this.isAdmin) {
+        this.getFoldersAll()
+          .then(res => {
+            if (res.data.length) {
+              this.foldersPublic = res.data
+            }
+          })
+          .catch(err => console.log(err))
+      }
     },
     addFolderBtn() {
       const addFolder = {
@@ -157,6 +193,12 @@ export default {
     }
     .folder {
       margin-bottom: 40px;
+      h3 {
+        margin-bottom: 10px;
+      }
+      hr {
+        margin: 20px 0;
+      }
       &--field {
         margin-bottom: 10px;
       }

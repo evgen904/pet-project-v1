@@ -34,6 +34,11 @@
             Пост виден всем
           </ui-checkbox>
         </div>
+        <div class="post--status" v-if="showAllPost">
+          Статус:
+          <span class="red" v-if="status === 'moderation'">на модерации</span>
+          <span class="green" v-else-if="status === 'active'">Виден всем</span>
+        </div>
         <div v-if="addWarning" class="post--field error">
           {{ addWarning }}
         </div>
@@ -110,6 +115,7 @@ export default {
       selectedFolder: "0",
       showPost: true,
       showAllPost: false,
+      status: "moderation",
       addWarning: "",
       posts: [],
       postsModeration: [],
@@ -134,7 +140,7 @@ export default {
     }
   },
   computed: {
-    ...mapState("folders", ["folders"]),
+    ...mapState("folders", ["foldersAll", "foldersUser"]),
     ...mapGetters("user", ["isAdmin"]),
     ...mapState("user", ["user"]),
     isEdit() {
@@ -151,8 +157,16 @@ export default {
         value: '0',
         text: 'Выберите категорию',
       }]
-      if (this.folders.length) {
-        this.folders.forEach(item => {
+      if (this.foldersAll.length) {
+        this.foldersAll.forEach(item => {
+          list.push({
+            value: item.name,
+            text: item.title,
+          })
+        })
+      }
+      if (this.foldersUser.length) {
+        this.foldersUser.forEach(item => {
           list.push({
             value: item.name,
             text: item.title,
@@ -240,6 +254,7 @@ export default {
             this.addWarning = ""
             this.title = res.data[0]["title"]
             this.description = res.data[0]["description"]
+            this.status = res.data[0]["status"]
             this.selectedFolder = res.data[0]["folder"]
             this.showPost = res.data[0]["show"]
             this.showAllPost = res.data[0]["showAll"]
@@ -318,6 +333,18 @@ export default {
         }
         .ui-select {
           max-width: 400px;
+        }
+      }
+      &--status {
+        font-size: 14px;
+        margin-bottom: 20px;
+        span {
+          &.green {
+            color: #00970c;
+          }
+          &.red {
+            color: #cc0000;
+          }
         }
       }
       &--list {
