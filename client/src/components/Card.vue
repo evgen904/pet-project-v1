@@ -37,7 +37,7 @@
       font-weight: normal;
       margin-bottom: 10px;
     }
-    p {
+    ::v-deep(p) {
       margin: 0 0 10px;
       &:last-child {
         margin-bottom: 0;
